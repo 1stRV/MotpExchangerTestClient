@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/baseLayout">
+<head>
+    <!--/*@thymesVar id="accountList" type="ru.x5.motpsender.testclient.controller.MotpToken"*/-->
+    <title>Работа с МОТП</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-margin-20">
+        <div class="row">
+            <!--/*@thymesVar id="motpToken" type="ru.x5.motpsender.testclient.controller.MotpToken"*/-->
+            <form th:action="@{/loadToken}" method="post" th:object="${motpToken}">
+                <!--/*@thymesVar id="appMotpToken" type="ru.x5.motpsender.testclient.controller.MotpToken"*/-->
+                <div class="col-md-6 col-md-offset-3" th:object="${appMotpToken}">
+                    <h2 th:text="'Работа с МОТП по ИНН ' + ${appMotpToken.getInn()}"></h2>
+                    <div class="form-group">
+                        <div class="col-sm-9">
+                            <label for="inn" title="ИНН">ИНН</label>
+                            <input id="inn" name="inn" title="ИНН">
+                        </div>
+                        <div class="col-sm-9">
+                            <label for="token" title="Токен">Токен</label>
+                            <textarea class="form-control rounded-0" rows="5" id="token" name="token"
+                                      title="Токен"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-9">
+                                <button type="submit" class="btn btn-primary btn-block">Загрузить</button>
+                            </div>
+                        </div>
+                        <div class="col-sm-9 alert alert-success" th:if="${tokenSuccess}" th:object="${motpToken}"
+                             th:text="'Загружен токен ' + ${motpToken}"></div>
+                        <div class="col-sm-9 alert alert-danger" th:if="${tokenError}"
+                             th:object="${motpToken}"
+                             th:text="'Ошибка при получении'"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!--/*@thymesVar id="kafkaAggregatedCisRequest" type="ru.x5.motpsender.integration.dto.KafkaAggregatedCisRequest"*/-->
+        <form th:action="@{/getAggregated}" method="post" th:object="${kafkaAggregatedCisRequest}">
+            <div class="col-md-6 col-md-offset-3">
+                <h4>Получение агрегата</h4>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <label for="cis" title="КИЗ">КИЗ</label>
+                        <input id="cis" name="cis" title="КИЗ">
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-9">
+                            <button type="submit" class="btn btn-primary btn-block">Запросить</button>
+                        </div>
+                    </div>
+                    <!--/*@thymesVar id="aggregatedCisResponse" type="ru.x5.motpsender.dao.dto.AggregatedCisResponse"*/-->
+                    <div class="col-sm-9 alert alert-success" th:if="${aggregateSuccess}"
+                         th:object="${aggregatedCisResponse}"
+                         th:text="'Ответ: ' + ${aggregatedCisResponse}"></div>
+                    <div class="col-sm-9 alert alert-danger" th:if="${aggregateError}"
+                         th:object="${aggregatedCisResponse}"
+                         th:text="'Ошибка при получении'"></div>
+                </div>
+            </div>
+        </form>
+        <!--/*@thymesVar id="kafkaSessionInfo" type="ru.x5.motpsender.integration.dto.KafkaSessionInfo"*/-->
+        <form th:action="@{/getProducts}" method="post" th:object="${kafkaSessionInfo}">
+            <div class="col-md-6 col-md-offset-3">
+                <h4>Получение списка продуктов</h4>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <label for="userInn" title="ИНН">ИНН</label>
+                        <input id="userInn" name="userInn" title="ИНН">
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-9">
+                            <button type="submit" class="btn btn-primary btn-block">Запросить</button>
+                        </div>
+                    </div>
+                    <!--/*@thymesVar id="getProductsListResponse" type="ru.x5.motpsender.dao.dto.GetProductsListResponse"*/-->
+                    <div class="col-sm-9 alert alert-success" th:if="${productsSuccess}"
+                         th:object="${getProductsListResponse}"
+                         th:text="'Ответ: ' + ${getProductsListResponse}"></div>
+                    <div class="col-sm-9 alert alert-danger" th:if="${productsError}"
+                         th:object="${getProductsListResponse}"
+                         th:text="'Ошибка при получении'"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
